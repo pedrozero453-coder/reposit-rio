@@ -98,7 +98,7 @@ Entre na pasta:
 cd CadastroProdutos
 ```
 
-### 2. Substituir o código
+### 2. Inserir o codigo
 
 Abra o arquivo:
 
