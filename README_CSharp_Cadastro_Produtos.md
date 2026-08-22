@@ -105,7 +105,7 @@ Abra o arquivo:
 ```text
 Program.cs
 ```
-
+Cole o codigo do arquivo Program.cs
 
 
 ### 3. Executar
