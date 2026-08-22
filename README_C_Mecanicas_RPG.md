@@ -245,3 +245,7 @@ O projeto pode ser expandido futuramente com funcionalidades como:
 O objetivo principal deste projeto é praticar fundamentos da linguagem C através da criação de uma estrutura simples de jogo em terminal.
 
 O projeto também serve como base para implementar sistemas mais complexos de jogos utilizando C.
+
+
+## Link para o projeto
+https://github.com/pedrozero453-coder/reposit-rio/blob/main/main.c
