@@ -106,7 +106,7 @@ Abra o arquivo:
 Program.cs
 ```
 
-Apague o conteúdo existente e coloque o código deste README dentro dele.
+
 
 ### 3. Executar
 
