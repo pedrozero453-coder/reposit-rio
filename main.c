@@ -9,7 +9,6 @@ void mapa() {
         {' ', ' ', ' ', ' ', ' '},
         {' ', ' ', ' ', ' ', ' '}
     };
-
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
             printf("[%c]", mostrarMapa[i][j]);
@@ -19,26 +18,23 @@ void mapa() {
 }
 
 void inventario(int alterarEspaco) {
-    char item1[8] = "Espada";
-    char item2[9] = "Pocao";
-    char item3[8] = "Escudo";
-    char item4[7] = "Chave";
-    char item5[6] = "Arco";
-    char item6[9] = "Flechas";
-    char item7[8] = "Tochas";
-    char item8[7] = "Vazio";
+    // Aumentamos o tamanho de 6~9 para 30 em todos os itens
+    char item1[30] = "Espada";
+    char item2[30] = "Pocao";
+    char item3[30] = "Escudo";
+    char item4[30] = "Chave";
+    char item5[30] = "Arco";
+    char item6[30] = "Flechas";
+    char item7[30] = "Tochas";
+    char item8[30] = "Vazio";
 
-    char* inventarioJogador[8] = {
-        item1, item2, item3, item4,
-        item5, item6, item7, item8
-    };
+    char* inventarioJogador[8] = { item1, item2, item3, item4, item5, item6, item7, item8 };
 
     do {
         printf("\n=== SEU INVENTARIO ===\n");
         for (int i = 0; i < 8; i++) {
             printf("[%d] %s\n", i + 1, inventarioJogador[i]);
         }
-
         printf("\nDigite de 1 a 8 para alterar um item.\n");
         printf("Digite 9 ou 10 para voltar ao menu: ");
         scanf("%d", &alterarEspaco);
@@ -52,34 +48,17 @@ void inventario(int alterarEspaco) {
             printf("Digite o nome do novo item: ");
         }
 
+        // Agora o fgets aceita até 30 caracteres com segurança
         switch (alterarEspaco) {
-            case 1:
-                fgets(item1, 8, stdin);
-                break;
-            case 2:
-                fgets(item2, 9, stdin);
-                break;
-            case 3:
-                fgets(item3, 8, stdin);
-                break;
-            case 4:
-                fgets(item4, 7, stdin);
-                break;
-            case 5:
-                fgets(item5, 6, stdin);
-                break;
-            case 6:
-                fgets(item6, 9, stdin);
-                break;
-            case 7:
-                fgets(item7, 8, stdin);
-                break;
-            case 8:
-                fgets(item8, 7, stdin);
-                break;
-            default:
-                printf("Opcao invalida!\n");
-                break;
+        case 1: fgets(item1, 30, stdin); break;
+        case 2: fgets(item2, 30, stdin); break;
+        case 3: fgets(item3, 30, stdin); break;
+        case 4: fgets(item4, 30, stdin); break;
+        case 5: fgets(item5, 30, stdin); break;
+        case 6: fgets(item6, 30, stdin); break;
+        case 7: fgets(item7, 30, stdin); break;
+        case 8: fgets(item8, 30, stdin); break;
+        default: printf("Opcao invalida!\n"); break;
         }
     } while (alterarEspaco < 11);
 }
@@ -90,31 +69,27 @@ void Menu(int selecionar) {
         printf("1 - Abrir Inventario\n");
         printf("2 - Sair e exibir mapa\n");
         printf("Escolha uma opcao: ");
-
         scanf("%d", &selecionar);
 
         switch (selecionar) {
-            case 1:
-                inventario(selecionar);
-                break;
-            case 2:
-                printf("Saindo do menu...\n");
-                break;
-            default:
-                printf("Opcao invalida!\n");
-                break;
+        case 1:
+            inventario(selecionar);
+            break;
+        case 2:
+            printf("Saindo do menu...\n");
+            break;
+        default:
+            printf("Opcao invalida!\n");
+            break;
         }
     }
 }
 
 int main() {
     printf("Bem-vindo, Jogador!\n");
-
     int selecionar = 0;
     Menu(selecionar);
-
     printf("\n=== MAPA DO JOGO ===\n");
     mapa();
-
     return 0;
 }
