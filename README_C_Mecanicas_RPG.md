@@ -246,6 +246,8 @@ O objetivo principal deste projeto é praticar fundamentos da linguagem C atrav�
 
 O projeto também serve como base para implementar sistemas mais complexos de jogos utilizando C.
 
+##Licença
+Projeto criado para fins de estudo.
 
 ## Link para o projeto
 https://github.com/pedrozero453-coder/reposit-rio/blob/main/main.c
