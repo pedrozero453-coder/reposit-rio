@@ -251,6 +251,7 @@ Crie um arquivo chamado:
 ```text
 main.cpp
 ```
+Cole o codigo do arquivo main.cpp
 
 
 
