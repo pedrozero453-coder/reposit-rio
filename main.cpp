@@ -33,9 +33,15 @@ public:
     GerenciadorTarefas(int cap) {
         capacidade = cap;
         quantidade = 0;
-
-        // O comando 'new' tem o trabalho de criar um novo espaço na memória para a lista (ou, em outros casos, para variáveis, objetos, entre outros).
         lista = new Tarefa * [capacidade];
+    }
+
+   
+    ~GerenciadorTarefas() {
+        for (int i = 0; i < quantidade; i++) {
+            delete lista[i]; // Deleta cada tarefa criada com 'new'
+        }
+        delete[] lista; // Deleta o array de ponteiros criado com 'new[]'
     }
 
     bool adicionarTarefa(std::string desc) {
@@ -60,7 +66,6 @@ public:
         }
     }
 
-    // Uso do FOR para percorrer os ponteiros
     void listarTarefas() {
         if (quantidade == 0) {
             std::cout << "\nNenhuma tarefa cadastrada." << std::endl;
@@ -83,7 +88,6 @@ int main() {
     GerenciadorTarefas* gerenciador = new GerenciadorTarefas(5);
     int opcao = 0;
 
-    // 1. Uso do DO WHILE para o menu principal
     do {
         std::cout << "1. Adicionar Tarefa" << std::endl;
         std::cout << "2. Listar Tarefas" << std::endl;
@@ -93,9 +97,8 @@ int main() {
         std::cout << "Escolha uma opcao: ";
         std::cin >> opcao;
 
-        std::cin.ignore(); // Limpa o buffer do cin
+        std::cin.ignore(); 
 
-        // 2. Uso do SWITCH CASE para o roteamento das opções principais
         switch (opcao) {
         case 1: {
             std::string novaDescricao;
@@ -119,7 +122,6 @@ int main() {
             int qtd = gerenciador->getQuantidade();
             int cap = gerenciador->getCapacidade();
 
-            // 3. Uso do ELSE IF para verificar o estado do armazenamento
             if (qtd == 0) {
                 std::cout << "\nStatus: O sistema esta totalmente vazio.\n" << std::endl;
             }
@@ -142,7 +144,6 @@ int main() {
 
     } while (opcao != 5);
 
-    // 4. Uso do WHILE demonstrando uma busca ou processamento secundário antes de fechar
     std::cout << "\nFechando aplicacao de forma segura..." << std::endl;
     int contador_fechamento = 3;
     while (contador_fechamento > 0) {
@@ -150,6 +151,8 @@ int main() {
         contador_fechamento--;
     }
 
-    // O comando '->' serve para acessar membros (funções ou variáveis) de um objeto através de seu ponteiro.
+
+    delete gerenciador; 
     return 0;
 }
+
