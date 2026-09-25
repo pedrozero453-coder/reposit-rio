@@ -1,352 +1,127 @@
-# Gerenciador de Tarefas em C++
+### Gerenciador de Tarefas em C++
 
-Um programa de console desenvolvido em **C++** para praticar conceitos fundamentais de **Programação Orientada a Objetos (POO)**, ponteiros e gerenciamento manual de memória.
+Um programa de console desenvolvido em C++ para praticar conceitos fundamentais de Programação Orientada a Objetos (POO), ponteiros e gerenciamento manual de memória de forma segura. 
 
-O sistema permite adicionar tarefas, listar tarefas, concluí-las e verificar o estado do armazenamento disponível.
+O sistema permite adicionar tarefas, listar tarefas, concluí-las e verificar o estado do armazenamento disponível. 
 
-## Conceitos utilizados
+### Conceitos utilizados
 
-O projeto foi desenvolvido para demonstrar os seguintes conceitos:
+O projeto foi desenvolvido para demonstrar os seguintes conceitos: 
 
-- **Classes e objetos** — `Tarefa` e `GerenciadorTarefas`.
-- **Encapsulamento** — os atributos das classes são privados e acessados através de métodos públicos.
-- **Ponteiros** — utilizados para armazenar e acessar objetos dinamicamente.
-- **Alocação dinâmica de memória** — utilização de `new`.
-- **Ponteiro para ponteiro (`Tarefa**`)** — utilizado para criar uma lista dinâmica de ponteiros para tarefas.
-- **Operador `->`** — utilizado para acessar métodos de objetos através de ponteiros.
-- **Construtores** — utilizados para inicializar as classes.
-- **`do while`** — utilizado para manter o menu funcionando até o usuário escolher sair.
-- **`switch case`** — utilizado para controlar as opções do menu.
-- **`for`** — utilizado para percorrer e listar as tarefas.
-- **`if / else if / else`** — utilizado para verificar o estado do armazenamento.
-- **`while`** — utilizado no processo de encerramento do programa.
+* **Classes e objetos** — Tarefa e GerenciadorTarefas.
+* **Encapsulamento** — os atributos das classes são privados e acessados através de métodos públicos.
+* **Ponteiros** — utilizados para armazenar e acessar objetos dinamicamente.
+* **Alocação dinâmica de memória** — utilização de new e liberação manual com delete / delete[].
+* **Destrutores** — implementados para limpar a memória alocada dinamicamente e evitar vazamentos de memória (*memory leaks*).
+* **Ponteiro para ponteiro (Tarefa**)** — utilizado para criar uma lista dinâmica de ponteiros para tarefas.
+* **Operador ->** — utilizado para acessar métodos de objetos através de ponteiros.
+* **Construtores** — utilizados para inicializar as classes.
+* **do while** — utilizado para manter o menu funcionando até o usuário escolher sair.
+* **switch case** — utilizado para controlar as opções do menu.
+* **for** — utilizado para percorrer e listar as tarefas.
+* **if / else if / else** — utilizado para verificar o estado do armazenamento.
+* **while** — utilizado no processo de encerramento do programa.
 
-## Funcionalidades
+### Funcionalidades
 
-O programa possui cinco opções:
+O programa possui cinco opções: 
 
-1. **Adicionar Tarefa**
-   - Permite cadastrar uma nova tarefa.
-   - O sistema possui capacidade para até 5 tarefas.
+1. **Adicionar Tarefa** 
 
-2. **Listar Tarefas**
-   - Exibe todas as tarefas cadastradas.
-   - Uma tarefa pendente aparece como `[ ]`.
-   - Uma tarefa concluída aparece como `[X]`.
+  * Permite cadastrar uma nova tarefa.
+  * O sistema possui capacidade inicial para até 5 tarefas.
+2. **Listar Tarefas** 
 
-3. **Concluir Tarefa**
-   - Permite selecionar uma tarefa pelo número.
-   - Altera seu estado para concluída.
+  * Exibe todas as tarefas cadastradas.
+  * Uma tarefa pendente aparece como [ ].
+  * Uma tarefa concluída aparece como [X].
+3. **Concluir Tarefa** 
 
-4. **Ver Status de Armazenamento**
-   - Informa quantos espaços estão sendo utilizados.
-   - Informa quando a lista está vazia.
-   - Informa quando a capacidade máxima foi atingida.
+  * Permite selecionar uma tarefa pelo número.
+  * Altera seu estado para concluída.
+4. **Ver Status de Armazenamento** 
 
-5. **Sair**
-   - Encerra o menu principal e inicia o processo de fechamento.
+  * Informa quantos espaços estão sendo utilizados.
+  * Informa quando a lista está vazia.
+  * Informa quando a capacidade máxima foi atingida.
+5. **Sair** 
 
-## Estrutura das classes
+  * Encerra o menu principal, libera as alocações da memória e inicia o processo de fechamento.
 
-### `Tarefa`
+### Estrutura das classes
 
-Representa uma única tarefa.
+### Tarefa
 
-Possui os atributos privados:
+Representa uma única tarefa. 
 
-- `descricao`
-- `concluida`
+* **Atributos privados:** descricao, concluida.
+* **Métodos públicos:** Tarefa(std::string desc), void concluir(), void exibir().
 
-E os métodos:
+### GerenciadorTarefas
 
-```cpp
-Tarefa(std::string desc);
-void concluir();
-void exibir();
-```
+É responsável por gerenciar e limpar a lista de tarefas. 
 
-O método `concluir()` altera o estado da tarefa para concluída.
+* **Atributos privados:** lista (ponteiro para ponteiros), capacidade, quantidade.
+* **Métodos públicos:** GerenciadorTarefas(int cap), ~GerenciadorTarefas() (Destrutor), bool adicionarTarefa(std::string desc), void concluirTarefa(int indice), void listarTarefas(), int getQuantidade(), int getCapacidade().
 
-O método `exibir()` mostra a tarefa utilizando:
+### Gerenciamento Seguro de Memória
 
-```text
-[ ] Tarefa pendente
-[X] Tarefa concluída
-```
+Embora este projeto utilize alocação manual com new para fins didáticos, o código foi estruturado para evitar desperdício de recursos através de gerenciamento manual estrito: 
 
-### `GerenciadorTarefas`
+cpp
 
-É responsável por gerenciar várias tarefas.
-
-Possui:
-
-- `lista` — ponteiro para os ponteiros das tarefas.
-- `capacidade` — quantidade máxima de tarefas.
-- `quantidade` — quantidade atual de tarefas cadastradas.
-
-Principais métodos:
-
-```cpp
-bool adicionarTarefa(std::string desc);
-void concluirTarefa(int indice);
-void listarTarefas();
-int getQuantidade();
-int getCapacidade();
-```
-
-A lista é criada dinamicamente através de:
-
-```cpp
-lista = new Tarefa*[capacidade];
-```
-
-E cada tarefa também é criada dinamicamente:
-
-```cpp
-lista[quantidade] = new Tarefa(desc);
-```
-
-## Ponteiros utilizados no projeto
-
-Um dos principais objetivos deste código é praticar ponteiros.
-
-### Ponteiro para objeto
-
-No `main`, o gerenciador é criado desta forma:
-
-```cpp
-GerenciadorTarefas* gerenciador = new GerenciadorTarefas(5);
-```
-
-A variável `gerenciador` não armazena diretamente o objeto. Ela armazena o **endereço de memória** do objeto.
-
-Por isso, para acessar seus métodos é utilizado o operador:
-
-```cpp
-gerenciador->adicionarTarefa(novaDescricao);
-```
-
-### Ponteiro para ponteiro
-
-A classe `GerenciadorTarefas` utiliza:
-
-```cpp
-Tarefa** lista;
-```
-
-Isso significa que `lista` é um ponteiro para ponteiros de `Tarefa`.
-
-A estrutura permite armazenar vários endereços de objetos `Tarefa`:
-
-```text
-lista
-  |
-  +----> Tarefa 1
-  |
-  +----> Tarefa 2
-  |
-  +----> Tarefa 3
-  |
-  +----> Tarefa 4
-  |
-  +----> Tarefa 5
-```
-
-## Estruturas de controle
-
-### `do while`
-
-O menu principal utiliza `do while` para garantir que o menu seja executado pelo menos uma vez:
-
-```cpp
-do
-{
-    // menu
-} while (opcao != 5);
-```
-
-### `switch case`
-
-O `switch` direciona o programa para a ação correspondente à opção escolhida:
-
-```cpp
-switch (opcao)
-{
-    case 1:
-        // adicionar tarefa
-        break;
-
-    case 2:
-        // listar tarefas
-        break;
-
-    // ...
+~GerenciadorTarefas() {
+    for (int i = 0; i < quantidade; i++) {
+        delete lista[i]; // Libera cada tarefa individual da memória
+    }
+    delete[] lista; // Libera o array de ponteiros principal
 }
-```
 
-### `for`
+Use o código com cuidado.
 
-O `for` percorre todas as tarefas cadastradas:
-
-```cpp
-for (int i = 0; i < quantidade; i++)
-{
-    lista[i]->exibir();
-}
-```
-
-### `if / else if / else`
-
-Utilizado para verificar o estado do armazenamento:
-
-```cpp
-if (qtd == 0)
-{
-    // vazio
-}
-else if (qtd == cap)
-{
-    // cheio
-}
-else
-{
-    // parcialmente utilizado
-}
-```
-
-### `while`
-
-Um `while` é utilizado no encerramento para realizar uma pequena contagem regressiva:
-
-```cpp
-while (contador_fechamento > 0)
-{
-    std::cout << "Desconectando em "
-              << contador_fechamento << "..." << std::endl;
-
-    contador_fechamento--;
-}
-```
-
-
-
-## Como executar
+### Como executar
 
 ### Pré-requisito
 
-É necessário ter um compilador C++ instalado.
+É necessário ter um compilador C++ instalado. Verifique rodando no terminal: 
 
-Você pode verificar se o **g++** está instalado executando no terminal:
+bash
 
-```bash
 g++ --version
-```
 
-Se aparecer a versão do compilador, ele está pronto para ser utilizado.
+Use o código com cuidado.
 
-## 1. Criar o arquivo
+### 1. Compilar
 
-Crie um arquivo chamado:
+Abra o terminal na pasta do projeto e execute: 
 
-```text
-main.cpp
-```
-Cole o codigo do arquivo main.cpp
+bash
 
-
-
-## 2. Compilar
-
-Abra o terminal na pasta onde está o arquivo `main.cpp` e execute:
-
-```bash
-g++ main.cpp -o gerenciador
-```
-
-Para utilizar um padrão moderno do C++, também pode executar:
-
-```bash
 g++ main.cpp -o gerenciador -std=c++17
-```
 
-## 3. Executar
+Use o código com cuidado.
 
-No Windows:
+### 2. Executar
 
-```bash
-gerenciador.exe
-```
+* **Windows:** gerenciador.exe
+* **Linux/macOS:** ./gerenciador
 
-No Linux/macOS:
+### Exemplo de uso
 
-```bash
-./gerenciador
-```
+text
 
-## Exemplo de uso
-
-Ao iniciar o programa:
-
-```text
 1. Adicionar Tarefa
 2. Listar Tarefas
 3. Concluir Tarefa
 4. Ver Status de Armazenamento
 5. Sair
-Escolha uma opcao:
-```
+Escolha uma opcao: 1
 
-Ao adicionar uma tarefa:
-
-```text
 Digite a descricao da tarefa: Estudar C++
-
 Tarefa adicionada com sucesso!
-```
 
-Ao listar:
+Use o código com cuidado.
 
-```text
-=== MINHAS TAREFAS ===
-1. [ ] Estudar C++
-======================
-```
+### Licença
 
-Depois de concluir:
-
-```text
-Digite o numero da tarefa que concluiu: 1
-
-Tarefa 1 concluida!
-```
-
-A lista passa a mostrar:
-
-```text
-=== MINHAS TAREFAS ===
-1. [X] Estudar C++
-======================
-```
-
-## Objetivo do projeto
-
-Este projeto tem como objetivo praticar fundamentos de **C++**, principalmente:
-
-`Classes → Objetos → Encapsulamento → Ponteiros → new → Operador -> → Estruturas de controle → Gerenciamento de memória`
-
-Além disso, o projeto serve como exercício para entender como objetos podem ser criados dinamicamente e acessados através de ponteiros.
-
-## Observação sobre gerenciamento de memória
-
-Este código utiliza `new` para alocar memória manualmente. Em um projeto real, seria necessário liberar essa memória utilizando `delete`/`delete[]` ou, preferencialmente, utilizar recursos modernos do C++, como **RAII**, `std::vector` e **smart pointers** (`std::unique_ptr` e `std::shared_ptr`).
-
-Neste projeto, a alocação manual foi mantida propositalmente para praticar o funcionamento de ponteiros e memória dinâmica.
-
----
-
-## Licença
-
-Projeto criado para fins de estudo.
-
-##Link para projeto
-https://github.com/pedrozero453-coder/reposit-rio/blob/main/main.cpp
+Projeto criado estritamente para fins de estudo e fixação de conceitos de ponteiros.
